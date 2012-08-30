@@ -114,6 +114,7 @@ TEMPLATE_DIRS = (
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
     "core.context_processors.InjectSettings",
+    "anutheme.context_processors.ANUTheme",
 )
 
 
@@ -138,6 +139,7 @@ INSTALLED_APPS = [
     
     # website
     'core',                 # core functionality
+    'anutheme',             # ANU theming
     'olac',                 # OLAC utils
 ]
 
@@ -177,6 +179,19 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
         'LOCATION': 'cache',
     }
+}
+
+
+
+# Setup ANU Theme
+ANU = {
+    # how long to cache the various ANU theme inserts for
+    'ANUCacheTime': 60 * 60 * 24,
+    'ANUSiteID': 264,
+    'RespOfficer': ADMINS[0][0],
+    'RespOfficerContact': ADMINS[0][1],
+    'SiteOfficer': ADMINS[0][0],
+    'SiteOfficerContact': ADMINS[0][1],
 }
 
 # Setup OLAC

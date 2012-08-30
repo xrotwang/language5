@@ -1,113 +1,114 @@
+{% load cache %}
 {% load staticfiles %}
+{% load anuthemetags %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>{% block title %}  {% endblock %} - {{ site.name }} - ANU</title>
+    {% anu_meta %}
+    <meta name="DC.title" content="{{ title }} - {{ site.name }} - ANU" />
+    <meta name="DC.identifier" scheme="URI" content="{{ request.path }}" />
+    <meta name="DC.description" content="{{ description }}" />
+    <meta name="DC.subject" content="{{ subject }}" />
+    <meta name="DC.date.modified" scheme="ISO8601" content="{{ last_modified }}" />
+    <meta name="DC.date.review" scheme="ISO8601" content="{{ last_modified }}" />
+    <meta name="DC.creator" content="{{ ANU.RespOfficer }}" />
+    <meta name="DC.creator.email" content="{{ ANU.RespOfficerContact }}" />
+    <meta name="description" content="{{ description }}" />
+    <meta name="subject" content="{{ subject }}" />
+    <meta name="keywords" content="{{ keywords }}" />
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-  <meta charset="utf-8">
-  <title>{% block title %} Language3 {% endblock %}</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="keywords" content="" /> 
-  <meta name="description" content="" />
-  <meta name="author" content="Simon J. Greenhill">
-  
-  <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-  <!--[if lt IE 9]>
-    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
-  
-  {% if debug %}
-    <link rel="stylesheet" href="{% static "bootstrap/css/bootstrap.css" %}" />
-    <link rel="stylesheet" href="{% static "bootstrap/css/bootstrap-responsive.css" %}" />
-  {% else %}
-    <link rel="stylesheet" href="{% static "bootstrap/css/bootstrap.min.css" %}" />
-    <link rel="stylesheet" href="{% static "bootstrap/css/bootstrap-responsive.min.css" %}" />
-  {% endif %}
-  
-  <style type="text/css">
-      html, body { 
-          height: 100%; 
-      }
-    body {
-      padding-top: 60px;
-      padding-bottom: 40px;
-    }
-    .sidebar-nav {
-      padding: 9px 0;
-    }
-  </style>
-  
+    <link media="screen" type="text/css" rel="stylesheet" href="/css/main.css" />
+
 </head>
 <body>
-    
-    
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container-fluid">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand" href="{% url index %}">Project name</a>
-          {% comment %}
-          <div class="btn-group pull-right">
-            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-              <i class="icon-user"></i> Username
-              <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-              <li><a href="#">Profile</a></li>
-              <li class="divider"></li>
-              <li><a href="#">Sign Out</a></li>
-            </ul>
-          </div>
-          {% endcomment %}
-          </div><!--/.nav-collapse -->
-        </div>
-      </div>
-    </div>
 
-    <div class="container-fluid">
-      <div class="row-fluid">
-        <div class="span2">
-          <div class="well sidebar-nav">
-              {% comment %} TODO: Work out how to add 'active' <li class="active"> {% endcomment %}
-              <ul class="nav nav-list">
-                  <li>
-                      <a href="{% url family-index %}">Families</a>
-                  </li>
-                  <li>
-                      <a href="{% url language-index %}">Languages</a>
-                  </li>
-                  <li>
-                      <a href="{% url about %}">About</a>
-                  </li>                  
-                  <li class="nav-header">Admin</li>
-                  <li class="divider"><!-- divider --></li>
-                  <li>
-                      <a href="{% url admin:index %}">Admin</a>
-                  </li>
-              </ul>
-          </div><!--/.well -->
-        </div><!--/span-->
-        <div class="span10">
-          <div class="row-fluid">
-              {% block content %}{% endblock %}
-          </div><!--/row-->
-        </div><!--/span-->
-      </div><!--/row-->
-      
-      <footer>
-        <p>&copy; 2012. Simon J. Greenhill. </p>
-      </footer>
-    </div><!--/.fluid-container-->
+    <!-- bodybanner if necessary -->
+    <div id="devlmsg">Under development</div>
     
-    <!-- javascript -->
-    <script src="{% static "/js/jquery.js" %}"></script>
-    <script src="{% static "bootstrap/js/bootstrap.min.js" %}"></script>
+    <!-- banner -->
+    {% anu_banner %}
+    <!-- menu -->
     
+    <!-- noindex -->
+    <!-- stops ANU search from treating the menu as content-->
+    <div id="menu">
+        <div class="narrow">
+            <!-- search box -->
+                <!-- TODO MODIFY THIS! -->
+                <div class="search-box">
+        			<p>Search {{ site.name }}</p>
+        			<form action="http://search.anu.edu.au/search/search.cgi" method="post">
+        			<div>
+            			<input name="scope" type="hidden" value="'.$SiteURL.'" />
+            			<input name="collection" type="hidden" value="anu_search" />
+            			<label for="local-query"><span class="nodisplay">Search query</span></label><input class="search-query" name="query" id="local-query" size="15" type="text" value="" />
+            			<label for="search"><span class="nodisplay">Search</span></label><input class="search-button" id="search" title="Search" type="submit" value="GO" /><br/>
+            			<a href="http://search.anu.edu.au/search/search.cgi?collection=anu_search&amp;form=advanced&amp;scope='.$SiteURL.'">Advanced search</a>
+        			</div>
+        			</form>
+        		</div> 
+
+        <!-- Start of Menu 1-->
+        	<div class="menu-flat menu-main">
+        		<p>{{ site.name }}</p>
+        		<ul id="nav-1">
+        			<li><a href="{% url index %}">Home</a></li>
+        			<li><a href="{% url family-index %}">Families</a></li>
+        			<li><a href="{% url language-index %}">Languages</a></li>
+        			<li><a href="{% url about %}">About</a></li>
+        		</ul>	
+        	</div>
+        <!-- End of Menu 1-->
+        
+        <!--Start of Menu 2-->	
+        	<div class="menu-flat menu-grey">
+        		<p>Admin</p>
+        		<ul id="nav-2">
+        			<li><a href="{% url admin:index %}">Admin</a></li>
+        		</ul>	
+        	</div>
+        <!--End of Menu 2-->
+
+        <!-- don't touch-->	
+        <!-- endnoindex -->	
+        </div> <!-- /narrow -->
+    </div>
+    
+    
+    <div id="content">    
+    <!-- START MAIN PAGE CONTENT -->	
+    	<div class="doublewide">
+            {% block content %}
+
+
+            {% endblock %}
+    	</div>	
+    <!-- END MAIN PAGE CONTENT -->
+    </div>
+    
+    <!-- noindex --> 
+    <div id="update-wrap">
+    	<div id="update-details">		
+    		<p class="sml-hdr">
+    			{% if about %}
+    			    <span class="right noprint">
+    			        <a href="{% url about %}"><strong>about this site</strong></a>
+    			    </span>
+    			{% endif %}
+    			Updated:&nbsp;&nbsp;
+    			<strong>{{ last_modified }}</strong>
+    			<span class="hpad">/</span>
+    			Responsible Officer:&nbsp;&nbsp; <a href="mailto:{{ ANU.RespOfficerContact }}"><strong>{{ ANU.RespOfficer }}</strong></a> 
+    			<span class="hpad">/</span>
+    			Page Contact:&nbsp;&nbsp;<a href="mailto:{{ ANU.SiteOfficerContact }}"><strong>{{ ANU.SiteOfficer }}</strong></a>
+    		</p> 
+    	</div>
+    </div>
+    <!-- endnoindex --> 	
+    
+    <!-- footer -->
+    {% anu_footer %}
+    <script type="text/javascript" src="http://styles.anu.edu.au/_anu/3/scripts/anu-menu.js"></script>
 </body>
 </html>
-
-
-
