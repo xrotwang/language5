@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load mptt_tags %}
+
+{% block title %} 
+    Language Classification
+{% endblock %}
+
+{% block content %}
+
+    <div class="page-header">
+        {% if root %}
+            <h1>Language Subgroupings</h1> 
+        {% else %}
+            <h1>Language Subgroup: {{ root.name }}</h1>
+        {% endif %}
+    </div>
+
+    {% drilldown_tree_for_node subgroup as drilldown %}
+    {% for node, structure in drilldown|tree_info %}
+        {% if structure.new_level %}<ul><li>{% else %}</li><li>{% endif %}
+        {% ifequal node subgroup %}
+            <strong>{{ node.name }}</strong>
+        {% else %}
+            <a href="{% url classification node.id %}">
+                <i class="icon-folder-open"></i>
+                {{ node.name }}
+            </a>
+        {% endifequal %}
+        {% if node.language.all %}
+            <ul>
+                {% for language in node.language.all %}
+                    <li class="language">
+                        <a href="{% url language-detail language.slug %}">
+                            <i class="icon-chevron-right"></i>
+                            {{ language }}
+                        </a> 
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% for level in structure.closed_levels %}
+            </li></ul>
+        {% endfor %}
+    {% endfor %}
+
+
+    <hr />
+
+    <ul>
+        {% recursetree nodes %}
+            <li class="subgroup">
+                <a href="{% url classification node.id %}">
+                    <i class="icon-folder-open"></i>
+                    {{ node.name }}
+                </a>
+                {% if node.language.all %}
+                    <ul>
+                        {% for language in node.language.all %}
+                            <li class="language">
+                                <a href="{% url language-detail language.slug %}">
+                                    <i class="icon-chevron-right"></i>
+                                    {{ language }}
+                                </a> 
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                {% if not node.is_leaf_node %}
+                    <ol>
+                        {{ children }}
+                    </ol>
+                {% endif %}
+            </li>
+        {% endrecursetree %}
+    </ul>
+
+{% endblock content %}

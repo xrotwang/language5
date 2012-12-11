@@ -62,7 +62,14 @@ urlpatterns = patterns('',
     
     # Subset-Detail: Show the given word subset
     url(r'^word/\?subset=(?P<slug>.+)$', WordDetail.as_view(), name="subset-detail"),
-    
+
+
+    # ------------------------------------------------------------------------ #
+    # Classification 
+    # ------------------------------------------------------------------------ #    
+    url(r'^classification/$', 'website.apps.classification.views.show', name="classification"),
+    url(r'^classification/(?P<group_id>.+)$', 'website.apps.classification.views.show', name="classification"),
+
     # ------------------------------------------------------------------------ #
     # Data entry
     # ------------------------------------------------------------------------ #    

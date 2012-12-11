@@ -19,8 +19,8 @@ env.venv = 'transnewguinea'
 
 def deploy():
     """Deploy the site."""
-    print '\nDEPLOY >> Updating remote mercurial repository...'
-    update()
+    #print '\nDEPLOY >> Updating remote mercurial repository...'
+    #update()
     print '\nDEPLOY >> Updating mercurial repository on deployment machine...'
     run("cd %s; hg pull; hg update" % env.remote_repository_dir)
     print '\nDEPLOY >> Syncing databases and migrating...'

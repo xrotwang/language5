@@ -148,11 +148,14 @@ INSTALLED_APPS = [
     'djangosecure',                      # django-secure: Security helper
     'django_tables2',                    # django-tables2: tables helper
     'watson',                            # search
-    
+    'mptt',                              # django-mptt for classification app
+
     # website
     'website.apps.core',                 # core functionality
     'website.apps.lexicon',              # Lexicon
     'website.apps.olac',                 # OLAC utils
+    'website.apps.classification',       # classification
+
 ]
 
 # Django-Security settings
