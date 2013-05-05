@@ -122,7 +122,3 @@ class Test_Detail(TestCase):
         self.failUnlessEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'entry/done.html')
         assert Task.objects.get(pk=self.task.id).done
-    
-    def test_var(self):
-        pass
-        
