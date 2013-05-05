@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load render_table from django_tables2 %}
+
+{% block title %} {{ object.family }} {% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>Language Family: {{ object.family }}:</h1>
+    </div>
+    
+    <ul class="breadcrumb">
+      <li>
+          <a href="#">Home</a> 
+          <span class="divider">/</span>
+      </li>
+      <li>
+          <a href="{% url "family-index" %}">Families</a>
+      </li>
+      <li class="active">
+          <a href="{% url "family-detail" object.slug %}">{{ object.family }}</a>
+      </li>
+    </ul>
+    
+    {% if languages %}
+        {% render_table languages "table.html" %}
+    {% else %}
+        <p class="error">No results found!</p>
+    {% endif %}
+    
+{% endblock %}
