@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load website_tags %}
+{% load render_table from django_tables2 %}
+
+{% block title %} {{ language.language }} {% endblock %}
+
+{% block extra_keywords %}{{ language.language }}{% endblock %}
+
+
+{% block content %}
+    <div class="page-header">
+        <h1>Language: {{ language }}</h1>
+    </div>
+    
+    <ul class="breadcrumb">
+      <li>
+          <a href="{% url "index" %}">Home</a> 
+          <span class="divider">/</span>
+      </li>
+      <li>
+          <a href="{% url "language-index" %}">Languages</a>
+          <span class="divider">/</span>
+      </li>
+      <li class="active">
+          <a href="{% url "language-detail" language.slug %}"> {{ language }}</a>
+      </li>
+    </ul>
+    
+    <h2>Information:</h2>
+    
+    <p><strong>ISO 639: </strong>{{ language.isocode }}</p>
+    
+    {% if alternatenames %}
+        <p>
+            <strong>Also Known As: </strong>
+            {% for name in alternatenames %}
+                {% if not forloop.first %}
+                  {% if forloop.last %} &amp; {% else %}, {% endif %}
+                {% endif %}
+                {{ name.name }}
+            {% endfor %}
+        </p>
+    {% endif %}
+    
+    {% if sources_used %}
+        <p>
+            <strong>Sources: </strong>
+            {% for source in sources_used %}
+                {% if not forloop.first %}
+                  {% if forloop.last %} &amp; {% else %}, {% endif %}
+                {% endif %}
+                <a href="{% url "source-detail" source.slug %}">{{ source }}</a>
+            {% endfor %}
+        </p>
+    {% endif %}
+    
+    <p> 
+        <strong>Classification: </strong> 
+        {{ language.classification }}
+    </p>
+    
+    <h2> Resources: </h2>
+    
+    <ul>
+        {% if language.isocode %}
+            <li><a href="{{ language|link_ethnologue }}">Ethnologue page for {{ language.language }}</a></li>
+            <li><a href="{{ language|link_olac }}">Open Language Archives search for {{ language.language }}</a></li>
+            <li><a href="{{ language|link_llmap }}">Linguist-List Map Project for {{ language.language }}</a></li>
+            <li><a href="{{ language|link_multitree }}">Multitree language relationships for {{ language.language }}</a></li>
+        {% endif %}
+        
+        {% if links %}
+            {% for link in links %}
+                <li><a href="{{ link.link }}">{{ link.description }}</a></li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+
+    {% ifinstalled "website.apps.pronouns" %}
+        
+        <h2> Pronouns: </h2>
+        
+        {% include "pronouns/template_pronoun_detail.html" %}
+    
+    {% endifinstalled %}
+    
+
+    
+    {% if language.isocode %}
+        <h2> Map: </h2>
+        
+        {{ language|language_map }}
+        
+    {% endif %}
+    
+    {% if attachments %}
+        {% include "includes/filelist.html" %}
+    {% endif %}
+    
+    {% ifinstalled "website.apps.lexicon" %}
+        <h2> Lexicon: </h2>
+        
+        {% if lexicon_table %}
+            {% render_table lexicon_table "table.html" %}
+        {% else %}
+            <p class="error">No results found!</p>
+        {% endif %}
+    {% endifinstalled %}
+    
+{% endblock %}
