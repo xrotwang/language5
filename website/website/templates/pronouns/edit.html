@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load render_table from django_tables2 %}
+{% load website_tags %}
+{% load pronoun_tags %}
+
+{% block title %} Pronoun Paradigms: Editing {{ paradigm.id }} {% endblock %}
+
+{% block head %}
+    <!-- for javascript charpicker, and formset adder -->
+    <link rel="stylesheet" type="text/css" href="{% static "css/jquery.keypad.css" %}" />
+    <script type="text/javascript" src="{% static "js/jquery.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/jquery.keypad.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/charpicker.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/jquery-scrolltofixed-min.js" %}"></script>
+    <style>
+    .add-row{ padding: 1em; }
+    .hide {display: none;}
+    </style>
+{% endblock %}
+
+
+{% block content %}
+    <div class="page-header">
+        <h1>Pronoun Paradigm: {{ paradigm.id }}</h1>
+    </div>
+
+    <h2>
+        <strong>Language: </strong> {{ paradigm.language }}
+    </h2>
+    <p>
+        <strong>Comment: </strong>
+        {{ paradigm.annotation }}
+    </p>    
+    
+    <div id="scroller">
+        <div class="row clearfix">
+            <p class="well well-small span8 offset2">
+                <span id="picker"></span>
+            </p>
+        </div>
+    </div>
+    
+    <h3> Pronouns: </h3>
+
+    <form action="{% url "pronouns:edit" paradigm.id %}" method="post" class="form-inline">
+        {% csrf_token %}
+        <table id="pronouns" class="table table-bordered table-condensed">
+            <thead>
+                <tr>
+                    <td>&nbsp;</td>
+                    <th>A</th>
+                    <th>S</th>
+                    <th>O</th>
+                    <th>Poss.</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row, formset in pronouns %}
+                <!-- ROW -->
+                    <tr>
+                        <th>{{ row }}</th>
+                        <td class="alignment_a">
+							{{ formset.A.management_form }}
+                            {% for form in formset.A %}
+								<p>
+									{{ form.entry }}
+		                            {{ form.annotation }}
+		                            <a href="#" onclick="$('#{{ form.annotation.auto_id }}').toggle()" ><i class="icon-comment"></i></a>
+		                            {% for hidden in form.hidden_fields %}
+		                                {{ hidden }}
+		                            {% endfor %}
+								</p>
+							{% endfor %}
+                        </td>
+                        <td class="alignment_s">
+							{{ formset.S.management_form }}
+                            {% for form in formset.S %}
+								<p>
+									{{ form.entry }}
+		                            {{ form.annotation }}
+		                            {% for hidden in form.hidden_fields %}
+		                                {{ hidden }}
+		                            {% endfor %}
+		                            <a href="#" onclick="$('#{{ form.annotation.auto_id }}').toggle()" ><i class="icon-comment"></i></a>
+								</p>
+							{% endfor %}
+                        </td>
+                        <td class="alignment_o">
+							{{ formset.O.management_form }}
+                            {% for form in formset.O %}
+								<p>
+									{{ form.entry }}
+		                            {{ form.annotation }}
+		                            {% for hidden in form.hidden_fields %}
+		                                {{ hidden }}
+		                            {% endfor %}
+		                            <a href="#" onclick="$('#{{ form.annotation.auto_id }}').toggle()" ><i class="icon-comment"></i></a>
+								</p>
+							{% endfor %}
+                        </td>
+                        <td class="alignment_p">
+							{{ formset.P.management_form }}
+                            {% for form in formset.P %}
+								<p>
+									{{ form.entry }}
+		                            {{ form.annotation }}
+		                            {% for hidden in form.hidden_fields %}
+		                                {{ hidden }}
+		                            {% endfor %}
+		                            <a href="#" onclick="$('#{{ form.annotation.auto_id }}').toggle()" ><i class="icon-comment"></i></a>
+								</p>
+							{% endfor %}
+                        </td>
+                    </tr>
+                    <!-- ENDROW -->
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-block btn-primary"><i class="icon-ok"></i> Save Paradigm </button>
+    </form>
+{% endblock %}
+
+
+
+{% block end %}
+    <script>
+        $(document).ready(function() {
+          $('.tip').tooltip();
+          $('#scroller').scrollToFixed();
+        });
+    </script>
+{% endblock %}
