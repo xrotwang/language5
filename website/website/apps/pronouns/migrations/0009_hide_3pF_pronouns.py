@@ -1,21 +1,23 @@
 # -*- coding: utf-8 -*-
-import datetime
+from south.utils import datetime_utils as datetime
 from south.db import db
-from south.v2 import SchemaMigration
+from south.v2 import DataMigration
 from django.db import models
 
-
-class Migration(SchemaMigration):
+class Migration(DataMigration):
 
     def forwards(self, orm):
-        # Adding field 'Paradigm.analect'
-        db.add_column('paradigms', 'analect',
-                      self.gf('django.db.models.fields.CharField')(max_length=1, null=True, blank=True),
-                      keep_default=False)
-            
+        "Write your forwards methods here."
+        for pt in orm['pronouns.pronountype'].objects.all():
+            if pt.person == '3' and pt.gender == 'F':
+                pt.active = False
+            else:
+                pt.active = True
+            print(u"{}-{}-{}-{} = {}".format(pt.person, pt.number, pt.gender, pt.alignment, pt.active))
+            pt.save()
+
     def backwards(self, orm):
-        # Deleting field 'Paradigm.analect'
-        db.delete_column('paradigms', 'analect')
+        "Write your backwards methods here."
 
     models = {
         u'auth.group': {
@@ -134,6 +136,7 @@ class Migration(SchemaMigration):
         },
         u'pronouns.pronountype': {
             'Meta': {'object_name': 'PronounType'},
+            'active': ('django.db.models.fields.BooleanField', [], {'default': 'True', 'db_index': 'True'}),
             'added': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'alignment': ('django.db.models.fields.CharField', [], {'max_length': '1'}),
             'editor': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"}),
@@ -166,3 +169,4 @@ class Migration(SchemaMigration):
     }
 
     complete_apps = ['pronouns']
+    symmetrical = True

@@ -1,21 +1,27 @@
 # -*- coding: utf-8 -*-
-import datetime
+from south.utils import datetime_utils as datetime
 from south.db import db
-from south.v2 import SchemaMigration
+from south.v2 import DataMigration
 from django.db import models
 
-
-class Migration(SchemaMigration):
+class Migration(DataMigration):
 
     def forwards(self, orm):
-        # Adding field 'Paradigm.analect'
-        db.add_column('paradigms', 'analect',
-                      self.gf('django.db.models.fields.CharField')(max_length=1, null=True, blank=True),
-                      keep_default=False)
-            
+        "Write your forwards methods here."
+        # Note: Don't use "from appname.models import ModelName". 
+        # Use orm.ModelName to refer to models in this application,
+        # and orm['appname.ModelName'] for models in other applications.
+        counter = 1
+        for pt in orm['pronouns.pronountype'].objects.all().order_by('id'):
+            if pt.active:
+                pt.sequence = counter
+            else:
+                pt.sequence = 1000 + counter
+            pt.save()
+            counter += 1
+        
     def backwards(self, orm):
-        # Deleting field 'Paradigm.analect'
-        db.delete_column('paradigms', 'analect')
+        "Write your backwards methods here."
 
     models = {
         u'auth.group': {
@@ -134,6 +140,7 @@ class Migration(SchemaMigration):
         },
         u'pronouns.pronountype': {
             'Meta': {'object_name': 'PronounType'},
+            'active': ('django.db.models.fields.BooleanField', [], {'default': 'True', 'db_index': 'True'}),
             'added': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'alignment': ('django.db.models.fields.CharField', [], {'max_length': '1'}),
             'editor': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"}),
@@ -141,6 +148,7 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'number': ('django.db.models.fields.CharField', [], {'max_length': '2'}),
             'person': ('django.db.models.fields.CharField', [], {'max_length': '2'}),
+            'sequence': ('django.db.models.fields.PositiveSmallIntegerField', [], {'db_index': 'True'}),
             'word': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['lexicon.Word']"})
         },
         u'pronouns.relationship': {
@@ -166,3 +174,4 @@ class Migration(SchemaMigration):
     }
 
     complete_apps = ['pronouns']
+    symmetrical = True

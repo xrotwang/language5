@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import datetime
+from south.utils import datetime_utils as datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
@@ -8,14 +8,16 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'Paradigm.analect'
-        db.add_column('paradigms', 'analect',
-                      self.gf('django.db.models.fields.CharField')(max_length=1, null=True, blank=True),
+        # Adding field 'Paradigm.label'
+        db.add_column('paradigms', 'label',
+                      self.gf('django.db.models.fields.CharField')(max_length=32, null=True, blank=True),
                       keep_default=False)
-            
+
+
     def backwards(self, orm):
-        # Deleting field 'Paradigm.analect'
-        db.delete_column('paradigms', 'analect')
+        # Deleting field 'Paradigm.label'
+        db.delete_column('paradigms', 'label')
+
 
     models = {
         u'auth.group': {
@@ -119,6 +121,7 @@ class Migration(SchemaMigration):
             'comment': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'editor': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'label': ('django.db.models.fields.CharField', [], {'max_length': '32', 'null': 'True', 'blank': 'True'}),
             'language': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.Language']"}),
             'source': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.Source']"})
         },
@@ -134,6 +137,7 @@ class Migration(SchemaMigration):
         },
         u'pronouns.pronountype': {
             'Meta': {'object_name': 'PronounType'},
+            'active': ('django.db.models.fields.BooleanField', [], {'default': 'True', 'db_index': 'True'}),
             'added': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'alignment': ('django.db.models.fields.CharField', [], {'max_length': '1'}),
             'editor': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"}),
@@ -141,6 +145,7 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'number': ('django.db.models.fields.CharField', [], {'max_length': '2'}),
             'person': ('django.db.models.fields.CharField', [], {'max_length': '2'}),
+            'sequence': ('django.db.models.fields.PositiveSmallIntegerField', [], {'unique': 'True', 'db_index': 'True'}),
             'word': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['lexicon.Word']"})
         },
         u'pronouns.relationship': {

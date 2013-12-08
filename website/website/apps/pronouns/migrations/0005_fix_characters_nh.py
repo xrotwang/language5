@@ -1,22 +1,29 @@
 # -*- coding: utf-8 -*-
 import datetime
 from south.db import db
-from south.v2 import SchemaMigration
+from south.v2 import DataMigration
 from django.db import models
 
+OLDCHAR = u'nh'
+NEWCHAR = u'ṋ'
 
-class Migration(SchemaMigration):
-
+class Migration(DataMigration):
     def forwards(self, orm):
-        # Adding field 'Paradigm.analect'
-        db.add_column('paradigms', 'analect',
-                      self.gf('django.db.models.fields.CharField')(max_length=1, null=True, blank=True),
-                      keep_default=False)
+        "Write your forwards methods here."
+        for e in orm['lexicon.lexicon'].objects.filter(entry__icontains=OLDCHAR):
+            new = e.entry.replace(OLDCHAR, NEWCHAR)
+            print(u"{}: {} -> {}".format(e.id, repr(e.entry), repr(new)))
+            e.entry = new
+            e.save()
             
     def backwards(self, orm):
-        # Deleting field 'Paradigm.analect'
-        db.delete_column('paradigms', 'analect')
-
+        "Write your backwards methods here."
+        for e in orm['lexicon.lexicon'].objects.filter(entry__icontains=NEWCHAR):
+            new = e.entry.replace(NEWCHAR, OLDCHAR)
+            print(u"{}: {} -> {}".format(e.id, repr(e.entry), repr(new)))
+            e.entry = new
+            e.save()
+        
     models = {
         u'auth.group': {
             'Meta': {'object_name': 'Group'},
@@ -166,3 +173,4 @@ class Migration(SchemaMigration):
     }
 
     complete_apps = ['pronouns']
+    symmetrical = True
